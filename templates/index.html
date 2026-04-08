@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI OCR Scanner - Advanced Text Extraction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Animated Background -->
+        <div class="animated-gradient"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <circle cx="14" cy="14" r="12" stroke="currentColor" stroke-width="2"/>
+                        <text x="14" y="18" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">OCR</text>
+                    </svg>
+                    <span>AI OCR Scanner</span>
+                </div>
+                <div class="nav-info">
+                    <span id="fileCount" class="info-badge">0 files</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <div class="container">
+                <!-- Header Section -->
+                <div class="header-section">
+                    <div class="header-content">
+                        <h1 class="main-title">Advanced OCR Scanner</h1>
+                        <p class="subtitle">Extract text from images, PDFs, and CSV files with AI-powered accuracy</p>
+                        <div class="feature-chips">
+                            <span class="chip">📄 Multi-Format Support</span>
+                            <span class="chip">🖼️ Images & PDFs</span>
+                            <span class="chip">📊 CSV Processing</span>
+                            <span class="chip">⚡ Fast Processing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Grid -->
+                <div class="grid-container">
+                    <!-- Upload Section -->
+                    <div class="upload-section">
+                        <div class="upload-card">
+                            <div class="upload-icon">
+                                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                    <path d="M32 12V44M52 32H12M42 22L32 12L22 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <rect x="8" y="48" width="48" height="8" rx="4" fill="currentColor" opacity="0.1"/>
+                                </svg>
+                            </div>
+                            
+                            <h2>Upload Files</h2>
+                            <p class="upload-description">Drag and drop or click to select</p>
+
+                            <div class="upload-area" id="uploadArea">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                    <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                                    <path d="M24 14V34M14 24H34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <p>Drag files here or click to browse</p>
+                                <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.csv,.bmp,.tiff" hidden>
+                            </div>
+
+                            <div class="supported-formats">
+                                <span class="format-badge">PDF</span>
+                                <span class="format-badge">JPG</span>
+                                <span class="format-badge">PNG</span>
+                                <span class="format-badge">BMP</span>
+                                <span class="format-badge">CSV</span>
+                                <span class="format-badge">TIFF</span>
+                            </div>
+
+                            <!-- Files List -->
+                            <div class="files-list" id="filesList">
+                                <div class="empty-state">
+                                    <p>No files selected yet</p>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="button-group">
+                                <button class="btn btn-primary btn-large" id="processBtn" onclick="processFiles()">
+                                    <span class="btn-icon">⚙️</span>
+                                    <span>Process Files</span>
+                                    <span class="loading-spinner" style="display: none;"></span>
+                                </button>
+                                <button class="btn btn-secondary btn-large" onclick="clearFiles()">
+                                    <span class="btn-icon">🗑️</span>
+                                    <span>Clear All</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-container" id="progressContainer" style="display: none;">
+                            <div class="progress-info">
+                                <span>Processing...</span>
+                                <span id="progressText">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status Message -->
+                        <div class="status-message" id="statusMessage"></div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-section">
+                        <div class="results-card">
+                            <div class="results-header">
+                                <h2>Extracted Content</h2>
+                                <span class="results-count" id="resultsCount">0 results</span>
+                            </div>
+
+                            <!-- Results Tabs -->
+                            <div class="tabs">
+                                <button class="tab-btn active" onclick="switchTab('preview')">
+                                    <span>👁️ Preview</span>
+                                </button>
+                                <button class="tab-btn" onclick="switchTab('pages')">
+                                    <span>📄 Pages</span>
+                                </button>
+                                <button class="tab-btn" onclick="switchTab('download')">
+                                    <span>⬇️ Download</span>
+                                </button>
+                            </div>
+
+                            <!-- Preview Tab -->
+                            <div id="preview" class="tab-content active">
+                                <div class="results-container" id="resultsContainer">
+                                    <div class="empty-state">
+                                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" opacity="0.5">
+                                            <rect x="8" y="12" width="48" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M8 28H56M8 40H56" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                                        </svg>
+                                        <p>No results yet. Upload files to get started!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pages Tab -->
+                            <div id="pages" class="tab-content">
+                                <div class="page-selector">
+                                    <div class="page-nav" id="pageNav" style="display: none;">
+                                        <button class="page-btn" onclick="previousPage()" id="prevPageBtn">← Previous</button>
+                                        <select id="pageSelect" onchange="goToPage()">
+                                            <option>Select page...</option>
+                                        </select>
+                                        <button class="page-btn" onclick="nextPage()" id="nextPageBtn">Next →</button>
+                                    </div>
+                                    <div id="pageContent" class="page-content">
+                                        <div class="empty-state">
+                                            <p>Select a file to view pages</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download Tab -->
+                            <div id="download" class="tab-content">
+                                <div class="download-options">
+                                    <div class="empty-state" id="downloadEmpty">
+                                        <p>Process files to enable downloads</p>
+                                    </div>
+                                    <div id="downloadContent" style="display: none;">
+                                        <div class="download-format">
+                                            <div class="download-item">
+                                                <div class="format-icon pdf">
+                                                    <span>PDF</span>
+                                                </div>
+                                                <div class="format-info">
+                                                    <h3>Download as PDF</h3>
+                                                    <p>Formatted document with all extracted text</p>
+                                                </div>
+                                                <button class="btn btn-primary btn-download" onclick="downloadResults('pdf')">
+                                                    📥 Download PDF
+                                                </button>
+                                            </div>
+
+                                            <div class="download-item">
+                                                <div class="format-icon csv">
+                                                    <span>CSV</span>
+                                                </div>
+                                                <div class="format-info">
+                                                    <h3>Download as CSV</h3>
+                                                    <p>Spreadsheet format for data analysis</p>
+                                                </div>
+                                                <button class="btn btn-primary btn-download" onclick="downloadResults('csv')">
+                                                    📥 Download CSV
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Advanced AI-Powered OCR Scanner • <span id="currentYear"></span></p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

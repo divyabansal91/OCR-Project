@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "OCR Web App API",
+    "description": "Complete API for OCR Web Application - PDF/Image/CSV processing with Tesseract OCR",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "📄 File Upload & Processing",
+      "item": [
+        {
+          "name": "🏠 Home Page",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": [""]
+            },
+            "description": "Get the home page of OCR web application"
+          },
+          "response": []
+        },
+        {
+          "name": "📄 Upload PDF File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files[]",
+                  "type": "file",
+                  "description": "Select a PDF file (multi-page supported)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["upload"]
+            },
+            "description": "Upload a PDF file for text extraction. Returns session_id to download results."
+          },
+          "response": []
+        },
+        {
+          "name": "🖼️ Upload Image File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files[]",
+                  "type": "file",
+                  "description": "Select an image file (JPG, PNG, BMP, TIFF)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["upload"]
+            },
+            "description": "Upload an image file for OCR text extraction"
+          },
+          "response": []
+        },
+        {
+          "name": "📊 Upload CSV File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files[]",
+                  "type": "file",
+                  "description": "Select a CSV file for data extraction"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["upload"]
+            },
+            "description": "Upload a CSV file for processing"
+          },
+          "response": []
+        },
+        {
+          "name": "📤 Upload Multiple Files",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files[]",
+                  "type": "file",
+                  "description": "First file"
+                },
+                {
+                  "key": "files[]",
+                  "type": "file",
+                  "description": "Second file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["upload"]
+            },
+            "description": "Upload multiple files at once (PDFs, images, or CSV)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📥 Download Results",
+      "item": [
+        {
+          "name": "💾 Download Results as CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/download/csv/{{session_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["download", "csv", "{{session_id}}"]
+            },
+            "description": "Download extracted text results as CSV file\n\nReplace {{session_id}} with the session_id from upload response"
+          },
+          "response": []
+        },
+        {
+          "name": "📄 Download Results as PDF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/download/pdf/{{session_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["download", "pdf", "{{session_id}}"]
+            },
+            "description": "Download extracted text results as PDF file\n\nReplace {{session_id}} with the session_id from upload response"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "session_id",
+      "value": "20260408_150552",
+      "description": "Session ID from upload response - copy from upload response to download results"
+    },
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "description": "Base URL of OCR Web App - change if running on different server"
+    }
+  ]
+}
