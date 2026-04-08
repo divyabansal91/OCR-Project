@@ -31,13 +31,23 @@ def download_poppler():
         print("📥 Downloading Poppler...")
         print("   (This may take a minute...)")
         
-        # Using a direct download link
-        url = "https://github.com/oschwartz10612/poppler-windows/releases/download/v24.02.0/poppler-24.02.0-windows-x64.zip"
+        # Using a direct download link - latest stable version
+        # Try multiple mirrors if GitHub fails
+        urls = [
+            "https://github.com/oschwartz10612/poppler-windows/releases/download/v25.01.0/poppler-25.01.0-windows-x64.zip",
+            "https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0/poppler-24.08.0-windows-x64.zip",
+        ]
         filename = "poppler.zip"
         
-        urllib.request.urlretrieve(url, filename)
-        print("✓ Download complete!")
-        return filename
+        for url in urls:
+            try:
+                urllib.request.urlretrieve(url, filename)
+                print("✓ Download complete!")
+                return filename
+            except:
+                continue
+        
+        raise Exception("All mirror URLs failed")
     except Exception as e:
         print(f"✗ Download failed: {e}")
         return None
